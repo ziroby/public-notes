@@ -1,11 +1,22 @@
 import React from 'react';
 import auth from 'solid-auth-client';
+import { fetchDocument } from 'tripledoc';
+import { foaf } from 'rdf-namespaces';
 
 import InputBox from './components/InputBox'
 import NotesList from './components/NotesList'
 import LoginDialog from './components/LoginDialog'
 
 import './App.css';
+
+async function getName(webId) {
+  /* 1. Fetch the Document at `webId`: */
+  const webIdDoc = await fetchDocument(webId);
+  /* 2. Read the Subject representing the current user's profile: */
+  const profile = webIdDoc.getSubject(webId);
+  /* 3. Get their foaf:name: */
+  return profile.getString(foaf.name)
+}
 
 class App extends React.Component {
 
@@ -21,7 +32,7 @@ class App extends React.Component {
         this.setState({
           loggedIn: true,
           loggingIn: false
-        })
+        })        
       });
   }
 
@@ -47,6 +58,8 @@ class App extends React.Component {
               webId: session.webId,
               loggingIn: null
             });
+            console.log("Getting user name")
+            getName(session.webId).then(name => this.setState({"username": name}));    
           } else {
             this.setState({
               loggingIn: true
@@ -64,9 +77,10 @@ class App extends React.Component {
         <header className="App-header">
           <h1>Public Notes</h1>
         </header>
+        <div className="username">{this.state.username}</div>
         <InputBox />
         <button>Add note</button>
-        <NotesList>\</NotesList>
+        <NotesList></NotesList>
         <button className="logout" onClick={() => this.logout()}>Log out</button>
       </div>
     );
