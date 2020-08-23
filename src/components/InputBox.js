@@ -29,7 +29,7 @@ class InputBox extends React.Component {
         <input type="text" id="note" name="note" value={this.state.value} onChange={this.handleChange}/>
         </label>
         <br/>
-        <input type="submit" value="Submit" />
+        <input type="submit" value="Add Note" />
     </form>
   }
 }

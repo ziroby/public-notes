@@ -91,13 +91,14 @@ class App extends React.Component {
   }
 
   addNote(note) {
-    addNoteToPod(note, this.state.noteList).then(() => {
-      getNotesList(this.state.webId).then(noteList => {
+    addNoteToPod(note, this.state.noteList)
+      .then(() => {
+        return getNotesList(this.state.webId)
+      }).then(noteList => {
         this.setState({
           "notes": getNotes(noteList)
         });
       });
-    });
   }
 
   onLogin(identityProvider) {
@@ -159,7 +160,7 @@ class App extends React.Component {
           <h1>Public Notes</h1>
         </header>
         <div className="username">{this.state.username}</div>
-        <InputBox addNote={(note) => this.addNote(note)}/>
+        <InputBox addNote={(note) => this.addNote(note)} />
         <NotesList notes={this.state.notes}></NotesList>
         <button className="logout" onClick={() => this.logout()}>Log out</button>
       </div>
